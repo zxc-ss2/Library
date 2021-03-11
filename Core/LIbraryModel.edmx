@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище libraryModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="bbk">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="BBK" Type="float" />
+        </EntityType>
+        <EntityType Name="book">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="author" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="id_trading" Type="int" Nullable="false" />
+          <Property Name="BBK_id" Type="int" Nullable="false" />
+          <Property Name="publication" Type="nvarchar" MaxLength="50" />
+          <Property Name="place" Type="nchar" MaxLength="10" />
+          <Property Name="year" Type="int" />
+        </EntityType>
+        <EntityType Name="client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id_trading" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="surname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="patronymic" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="birthday" Type="date" Nullable="false" />
+          <Property Name="address" Type="nvarchar(max)" />
+          <Property Name="workplace" Type="nvarchar" MaxLength="50" />
+          <Property Name="studyplace" Type="nvarchar" MaxLength="50" />
+          <Property Name="id_role" Type="int" />
+          <Property Name="phone" Type="bigint" />
+          <Property Name="login" Type="nvarchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="formular">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id_trading" Type="int" />
+        </EntityType>
+        <EntityType Name="quantity">
+          <Key>
+            <PropertyRef Name="id_book" />
+          </Key>
+          <Property Name="id_book" Type="int" Nullable="false" />
+          <Property Name="instook" Type="int" />
+          <Property Name="total" Type="int" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="id_role" />
+          </Key>
+          <Property Name="id_role" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="trading">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="ticket" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ISBN" Type="int" Nullable="false" />
+          <Property Name="delivery" Type="date" Nullable="false" />
+          <Property Name="reception" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_book_bbk">
+          <End Role="bbk" Type="Self.bbk" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="book" Type="Self.book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="bbk">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book">
+              <PropertyRef Name="BBK_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_book_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="book" Type="Self.book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_client_roles">
+          <End Role="roles" Type="Self.roles" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="client" Type="Self.client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="id_role" />
+            </Principal>
+            <Dependent Role="client">
+              <PropertyRef Name="id_role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_client_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="client" Type="Self.client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="client">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_formular_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="formular" Type="Self.formular" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="formular">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quantity_book">
+          <End Role="book" Type="Self.book" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="quantity" Type="Self.quantity" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quantity">
+              <PropertyRef Name="id_book" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище libraryModelContainer">
+          <EntitySet Name="bbk" EntityType="Self.bbk" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="book" EntityType="Self.book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="client" EntityType="Self.client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="formular" EntityType="Self.formular" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="quantity" EntityType="Self.quantity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="roles" EntityType="Self.roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trading" EntityType="Self.trading" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_book_bbk" Association="Self.FK_book_bbk">
+            <End Role="bbk" EntitySet="bbk" />
+            <End Role="book" EntitySet="book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_book_trading" Association="Self.FK_book_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="book" EntitySet="book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_client_roles" Association="Self.FK_client_roles">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="client" EntitySet="client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_client_trading" Association="Self.FK_client_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="client" EntitySet="client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_formular_trading" Association="Self.FK_formular_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="formular" EntitySet="formular" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quantity_book" Association="Self.FK_quantity_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="quantity" EntitySet="quantity" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="libraryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="bbk">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="BBK1" Type="Double" />
+          <NavigationProperty Name="book" Relationship="Self.FK_book_bbk" FromRole="bbk" ToRole="book" />
+        </EntityType>
+        <EntityType Name="book">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="id_trading" Type="Int32" Nullable="false" />
+          <Property Name="BBK_id" Type="Int32" Nullable="false" />
+          <Property Name="publication" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="place" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="year" Type="Int32" />
+          <NavigationProperty Name="bbk" Relationship="Self.FK_book_bbk" FromRole="book" ToRole="bbk" />
+          <NavigationProperty Name="trading" Relationship="Self.FK_book_trading" FromRole="book" ToRole="trading" />
+          <NavigationProperty Name="quantity" Relationship="Self.FK_quantity_book" FromRole="book" ToRole="quantity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id_trading" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="workplace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="studyplace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="Int64" />
+          <Property Name="id_role" Type="Int32" />
+          <NavigationProperty Name="trading" Relationship="Self.FK_client_trading" FromRole="client" ToRole="trading" />
+          <NavigationProperty Name="roles" Relationship="libraryModel.FK_client_roles" FromRole="client" ToRole="roles" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="formular">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id_trading" Type="Int32" />
+          <NavigationProperty Name="trading" Relationship="Self.FK_formular_trading" FromRole="formular" ToRole="trading" />
+        </EntityType>
+        <EntityType Name="trading">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="ticket" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISBN" Type="Int32" Nullable="false" />
+          <Property Name="delivery" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="reception" Type="DateTime" Precision="0" Nullable="false" />
+          <NavigationProperty Name="book" Relationship="Self.FK_book_trading" FromRole="trading" ToRole="book" />
+          <NavigationProperty Name="client" Relationship="Self.FK_client_trading" FromRole="trading" ToRole="client" />
+          <NavigationProperty Name="formular" Relationship="Self.FK_formular_trading" FromRole="trading" ToRole="formular" />
+        </EntityType>
+        <EntityType Name="quantity">
+          <Key>
+            <PropertyRef Name="id_book" />
+          </Key>
+          <Property Name="id_book" Type="Int32" Nullable="false" />
+          <Property Name="instook" Type="Int32" />
+          <Property Name="total" Type="Int32" />
+          <NavigationProperty Name="book" Relationship="Self.FK_quantity_book" FromRole="quantity" ToRole="book" />
+        </EntityType>
+        <Association Name="FK_book_bbk">
+          <End Role="bbk" Type="Self.bbk" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="book" Type="Self.book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="bbk">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book">
+              <PropertyRef Name="BBK_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_book_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="book" Type="Self.book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quantity_book">
+          <End Role="book" Type="Self.book" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="quantity" Type="Self.quantity" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quantity">
+              <PropertyRef Name="id_book" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_client_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="client" Type="Self.client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="client">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_formular_trading">
+          <End Role="trading" Type="Self.trading" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="formular" Type="Self.formular" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trading">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="formular">
+              <PropertyRef Name="id_trading" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="libraryEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bbk" EntityType="Self.bbk" />
+          <EntitySet Name="book" EntityType="Self.book" />
+          <EntitySet Name="client" EntityType="Self.client" />
+          <EntitySet Name="formular" EntityType="Self.formular" />
+          <EntitySet Name="trading" EntityType="Self.trading" />
+          <EntitySet Name="quantity" EntityType="Self.quantity" />
+          <AssociationSet Name="FK_book_bbk" Association="Self.FK_book_bbk">
+            <End Role="bbk" EntitySet="bbk" />
+            <End Role="book" EntitySet="book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_book_trading" Association="Self.FK_book_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="book" EntitySet="book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quantity_book" Association="Self.FK_quantity_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="quantity" EntitySet="quantity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_client_trading" Association="Self.FK_client_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="client" EntitySet="client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_formular_trading" Association="Self.FK_formular_trading">
+            <End Role="trading" EntitySet="trading" />
+            <End Role="formular" EntitySet="formular" />
+          </AssociationSet>
+          <EntitySet Name="roles" EntityType="libraryModel.roles" />
+          <AssociationSet Name="FK_client_roles" Association="libraryModel.FK_client_roles">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="client" EntitySet="client" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="id_role" />
+          </Key>
+          <Property Name="id_role" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="client" Relationship="libraryModel.FK_client_roles" FromRole="roles" ToRole="client" />
+        </EntityType>
+        <Association Name="FK_client_roles">
+          <End Type="libraryModel.roles" Role="roles" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="libraryModel.client" Role="client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="id_role" />
+            </Principal>
+            <Dependent Role="client">
+              <PropertyRef Name="id_role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище libraryModelContainer" CdmEntityContainer="libraryEntities">
+          <EntitySetMapping Name="bbk">
+            <EntityTypeMapping TypeName="libraryModel.bbk">
+              <MappingFragment StoreEntitySet="bbk">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="BBK1" ColumnName="BBK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="book">
+            <EntityTypeMapping TypeName="libraryModel.book">
+              <MappingFragment StoreEntitySet="book">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="author" ColumnName="author" />
+                <ScalarProperty Name="id_trading" ColumnName="id_trading" />
+                <ScalarProperty Name="BBK_id" ColumnName="BBK_id" />
+                <ScalarProperty Name="publication" ColumnName="publication" />
+                <ScalarProperty Name="place" ColumnName="place" />
+                <ScalarProperty Name="year" ColumnName="year" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="client">
+            <EntityTypeMapping TypeName="libraryModel.client">
+              <MappingFragment StoreEntitySet="client">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_trading" ColumnName="id_trading" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="patronymic" ColumnName="patronymic" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="workplace" ColumnName="workplace" />
+                <ScalarProperty Name="studyplace" ColumnName="studyplace" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="id_role" ColumnName="id_role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="formular">
+            <EntityTypeMapping TypeName="libraryModel.formular">
+              <MappingFragment StoreEntitySet="formular">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_trading" ColumnName="id_trading" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trading">
+            <EntityTypeMapping TypeName="libraryModel.trading">
+              <MappingFragment StoreEntitySet="trading">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ticket" ColumnName="ticket" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="delivery" ColumnName="delivery" />
+                <ScalarProperty Name="reception" ColumnName="reception" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="quantity">
+            <EntityTypeMapping TypeName="libraryModel.quantity">
+              <MappingFragment StoreEntitySet="quantity">
+                <ScalarProperty Name="id_book" ColumnName="id_book" />
+                <ScalarProperty Name="instook" ColumnName="instook" />
+                <ScalarProperty Name="total" ColumnName="total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="roles">
+            <EntityTypeMapping TypeName="libraryModel.roles">
+              <MappingFragment StoreEntitySet="roles">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id_role" ColumnName="id_role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
